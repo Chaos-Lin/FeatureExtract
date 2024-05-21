@@ -33,8 +33,8 @@ def handleImages(data_dir ,output_folder, openface2Path):
 
 
 if __name__ == "__main__":
-    input_dir = "D:\\Search\\MSA\\data\\VideoFeature\\video_frames"
+    input_dir = "D:\\Search\\MSA\\SIMS\\VideoFeature\\video_frames"
     openface2_path = "D:\\Tool\\OpenFace_2.2.0_win_x64_with_models\\FeatureExtraction.exe"
-    output_dir = "D:\\Search\\MSA\\data\\VideoFeature\\openface_feature"
+    output_dir = "D:\\Search\\MSA\\SIMS\\VideoFeature\\openface_feature"
     os.makedirs(output_dir, exist_ok=True)
     handleImages(input_dir, output_dir, openface2_path)

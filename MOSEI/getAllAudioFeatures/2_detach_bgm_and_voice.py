@@ -31,7 +31,7 @@ def fetch_voices(input_dir, output_dir):
                 print(f"Error occurred while processing {audio_path}: {e}")
 
 if __name__ == "__main__":
-    input_path = r'D:\Search\MSA\data\AudioFeature\audioRaw'
-    output_path = r'D:\Search\MSA\data\AudioFeature\audioPeople'
+    input_path = r'D:\Search\MSA\SIMS\AudioFeature\audioRaw'
+    output_path = r'D:\Search\MSA\SIMS\AudioFeature\audioPeople'
     os.makedirs(output_path, exist_ok=True)
     fetch_voices(input_path, output_path)

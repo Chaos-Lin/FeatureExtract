@@ -5,22 +5,20 @@ import pandas as pd
 def __init_MESIC():
     # 读取audio的特征
     audio_data = np.load('D:\Search\MSA\data\AudioFeature\\audioFeature.npz')
-    audio_id = audio_data['audio_id']
-    audio_clip_id = audio_data['audio_clip_id']
-    audio_id_clip_id = audio_data['audio_id_clip_id']
     feature_A = audio_data['feature_A']
 
     # 读取text的特征
     text_data = np.load('D:\Search\MSA\data\TextFeature\\textFeature.npz')
     raw_text = text_data['raw_text']
+    tokens = text_data["tokens"]
     feature_T = text_data['feature_T']
 
     # 读取video的特征
     video_data = np.load('D:\Search\MSA\data\VideoFeature\\videoFeature.npz')
     feature_V = video_data['feature_V']
-    video_id = video_data['video_id']
-    video_clip_id = video_data['video_clip_id']
-    video_id_clip_id = video_data['video_id_clip_id']
+    # video_id = video_data['video_id']
+    # video_clip_id = video_data['video_clip_id']
+    # video_id_clip_id = video_data['video_id_clip_id']
 
     # 读取label
     path = "D:\Search\MSA\data\SIMS_raw\\label.csv"
@@ -31,13 +29,17 @@ def __init_MESIC():
     label_V = label_data['label_V'].values
     label_A = label_data['label_A'].values
     mode = label_data['mode'].values
+    video_id = label_data['video_id']
+    video_clip_id = label_data['clip_id']
+
 
     # 写入pkl文件
     mesicData = {
             'video_id': video_id,
             'video_clip_id': video_clip_id,
-            'video_id_clip_id': video_id_clip_id,
+            # 'video_id_clip_id': video_id_clip_id,
             'text_raw': raw_text,
+            "tokens": tokens,
             'text_mask': feature_T,
             'audio': feature_A,
             'vision': feature_V,
@@ -47,7 +49,7 @@ def __init_MESIC():
             'label_A': label_A,
             'mode':mode
         }
-    with open(r'D:\Search\MSA\data\unaligned_unsplit_data.pkl', 'ab') as f:
+    with open(r'D:\Search\MSA\SIMS\unaligned_unsplit_data.pkl', 'ab') as f:
         pickle.dump(mesicData, f)
 
 __init_MESIC()

@@ -14,8 +14,8 @@ def tokenize(text, model, tokenizer, pad_first = False):
     # 添加特殊标记[CLS]和[SEP]
     input_ids = [tokenizer.cls_token_id] + input_ids + [tokenizer.sep_token_id]
 
-    # Padding到最大长度50
-    max_length = 50
+    # Padding到最大长度39
+    max_length = 39
     if len(input_ids) < max_length:
         if pad_first:
             input_ids += [tokenizer.pad_token_id] * (max_length - len(input_ids))
@@ -40,7 +40,12 @@ def tokenize(text, model, tokenizer, pad_first = False):
     else:
         token_embeddings = last_hidden_states
 
-    return token_embeddings
+    if len(input_ids) < max_length:
+        input_ids += [tokenizer.pad_token_id] * (max_length - len(input_ids))
+        input_tensor = torch.tensor([input_ids])
+
+
+    return token_embeddings,input_tensor
 
 
 
@@ -50,6 +55,7 @@ def get_text_features(input_dir, output_dir):
     text_id_clip_id = []
     feature_T = []
     raw_text = []
+    tokens = []
 
     model_name = 'D:\Search\pretrained_weights\\bert-base-chinese'
     tokenizer = BertTokenizer.from_pretrained(model_name)
@@ -63,15 +69,16 @@ def get_text_features(input_dir, output_dir):
             text_clip_id.append(row['clip_id'])
             text_id_clip_id.append(f"{row['video_id']}_{row['clip_id']}")
             raw_text.append(row['text'])
-            embedding = tokenize(row['text'], model, tokenizer)
+            embedding, token = tokenize(row['text'], model, tokenizer)
+            tokens.append(token)
             feature_T.append(embedding)
     # 保存
     save_path = os.path.join(output_dir, 'textFeature.npz')
     np.savez(save_path, text_id=text_id, text_clip_id=text_clip_id, text_id_clip_id=text_id_clip_id,
-             feature_T=feature_T, raw_text=raw_text)
+             feature_T=feature_T, raw_text=raw_text, tokens=tokens)
 
 if __name__ == '__main__':
-    input_dir = 'D:\Search\MSA\data\SIMS_raw'
-    output_dir = 'D:\Search\MSA\data\TextFeature'
+    input_dir = 'D:\Search\MSA\SIMS\SIMS_raw'
+    output_dir = 'D:\Search\MSA\SIMS\TextFeature'
     os.makedirs(output_dir, exist_ok=True)
     get_text_features(input_dir, output_dir)

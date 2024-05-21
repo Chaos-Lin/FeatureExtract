@@ -1,5 +1,4 @@
 
-# 第二步：openCV提取特征
 # 输入是图片
 import os
 import argparse
@@ -124,8 +123,8 @@ class getFeatures():
 
 
 if __name__ == "__main__":
-    input_dir = "D:\\Search\\MSA\\data\\VideoFeature\\openface_feature"
-    output_dir = "D:\\Search\\MSA\\data\\VideoFeature"
+    input_dir = "D:\\Search\\MSA\\SIMS\\VideoFeature\\openface_feature"
+    output_dir = "D:\\Search\\MSA\\SIMS\\VideoFeature"
     os.makedirs(output_dir, exist_ok=True)
     gf = getFeatures(input_dir, output_dir)
     gf.results()

@@ -33,7 +33,7 @@ def batch_extract_audio(data_dir, output_dir):
                 print(f"Input video {input_path} does not exist or is not readable")
 
 if __name__ == '__main__':
-    data_dir = r'D:\Search\MSA\data\SIMS_raw\Raw'
-    output_dir = 'D:\Search\MSA\data\AudioFeature\\audioRaw'  # 存放音频的总体路径
+    data_dir = r'D:\Search\MSA\SIMS\SIMS_raw\Raw'
+    output_dir = 'D:\Search\MSA\SIMS\AudioFeature\\audioRaw'  # 存放音频的总体路径
     os.makedirs(output_dir, exist_ok=True)
     batch_extract_audio(data_dir, output_dir)

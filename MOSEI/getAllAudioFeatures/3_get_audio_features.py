@@ -2,6 +2,7 @@
 import os
 import argparse
 import librosa
+import soundfile as sf
 import struct
 import pandas as pd
 import numpy as np
@@ -9,7 +10,7 @@ from glob import glob
 from tqdm import tqdm
 import torch
 import torchaudio
-from transformers import Wav2Vec2ForCTC, Wav2Vec2Processor
+from transformers import Wav2Vec2ForCTC, Wav2Vec2Processor, Wav2Vec2Tokenizer, Wav2Vec2Model
 
 
 class getFeatures():
@@ -18,6 +19,16 @@ class getFeatures():
         self.output_dir = output_dir
         self.padding_mode = 'zeros'
         self.padding_location = 'back'
+        self.model_id = "D:\\Search\\pretrained_weights\\wav2vec2-base-960h"
+        # self.model_id = "facebook/wav2vec2-base-960h"
+        self.CTC = Wav2Vec2Processor.from_pretrained(self.model_id)
+        self.model = Wav2Vec2Model.from_pretrained(self.model_id)
+        self.processor = Wav2Vec2Processor.from_pretrained(self.model_id)
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.model = self.model.to(self.device)
+        self.processor = self.processor
+        print(self.device)
+
 
 
     # 文本转录
@@ -49,6 +60,15 @@ class getFeatures():
     # 也就是说最后的是这三个部分的cat
     # MFCC 主要捕获了音频信号的语音特征，用于语音识别、语音情感分析等任务。
 
+    def __getAudioFeatures(self, wavFile):
+        audio, sample_rate = sf.read(wavFile)
+        target_sample_rate = 16000
+        audio_resampled = librosa.resample(audio, orig_sr=sample_rate, target_sr=target_sample_rate)
+        input_values = self.processor(audio_resampled,
+                                 sampling_rate=target_sample_rate,
+                                 return_tensors="pt").input_values.permute(1,0).to(self.device)
+        result = self.model(input_values)
+        return result["last_hidden_state"].squeeze()
     def __padding(self, feature, MAX_LEN):
         """
         mode:
@@ -106,7 +126,7 @@ class getFeatures():
                 audio_id_clip_id.append(str(video_dir) + "_" + str(single_audio.split('.')[0]))
                 # print(single_audio)  ### 0001.wav
                 audio_path = os.path.join(self.data_dir, video_dir, single_audio)
-                embedding_A = self.__getAudioEmbedding(audio_path)
+                embedding_A = self.__getAudioFeatures(audio_path)
                 features_A.append(embedding_A)
                 # text = self.__transText(audio_path)
                 # features_AtoT.append(text)
@@ -118,12 +138,13 @@ class getFeatures():
         # print('print(features_A[1])',len(features_A[1]))
         # print('print(features_A[1][0])', len(features_A[1][0]))
         # print('print(features_A[27])', len(features_A[27]))
-        feature_A = self.__paddingSequence(features_A)
+        # feature_A = self.__paddingSequence(features_A)
 
         # 保存
+        features_A = np.array(features_A.to('cpu'))
         save_path = os.path.join(self.output_dir, 'audioFeature.npz')
         np.savez(save_path, audio_id=audio_id, audio_clip_id=audio_clip_id, audio_id_clip_id=audio_id_clip_id,
-                 feature_A=feature_A)
+                 feature_A=features_A)
 
         print('Features are saved in %s!' % save_path)
 
@@ -132,8 +153,8 @@ class getFeatures():
 
 
 if __name__ == "__main__":
-    input_dir= "D:\Search\MSA\data\AudioFeature\\audioRaw"
-    output_dir= 'D:\Search\MSA\data\AudioFeature'
+    input_dir= "D:\Search\MSA\SIMS\AudioFeature\\audioRaw"
+    output_dir= 'D:\Search\MSA\SIMS\AudioFeature'
     os.makedirs(output_dir, exist_ok=True)
     gf = getFeatures(input_dir,output_dir)
     gf.results()
