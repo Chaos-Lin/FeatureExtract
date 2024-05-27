@@ -11,23 +11,25 @@ from tqdm import tqdm
 import torch
 import torchaudio
 from transformers import Wav2Vec2ForCTC, Wav2Vec2Processor, Wav2Vec2Tokenizer, Wav2Vec2Model
-
+import csv
 
 class getFeatures():
-    def __init__(self, input_dir, output_dir):
+    def __init__(self, input_dir, output_dir, csv_path, mode='libraso'):
         self.data_dir = input_dir
         self.output_dir = output_dir
         self.padding_mode = 'zeros'
         self.padding_location = 'back'
-        self.model_id = "D:\\Search\\pretrained_weights\\wav2vec2-base-960h"
-        # self.model_id = "facebook/wav2vec2-base-960h"
-        self.CTC = Wav2Vec2Processor.from_pretrained(self.model_id)
-        self.model = Wav2Vec2Model.from_pretrained(self.model_id)
-        self.processor = Wav2Vec2Processor.from_pretrained(self.model_id)
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        self.model = self.model.to(self.device)
-        self.processor = self.processor
-        print(self.device)
+        self.csv_path = csv_path
+        self.mode = mode
+
+        if mode == 'wav2vec2':
+            self.model_id = "D:\\Search\\pretrained_weights\\wav2vec2-base-960h"
+            self.CTC = Wav2Vec2Processor.from_pretrained(self.model_id)
+            self.model = Wav2Vec2Model.from_pretrained(self.model_id)
+            self.processor = Wav2Vec2Processor.from_pretrained(self.model_id)
+            self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+            self.model = self.model.to(self.device)
+            print(self.device)
 
 
 
@@ -114,36 +116,30 @@ class getFeatures():
     def results(self):
         audio_id = []
         audio_clip_id = []
-        audio_id_clip_id = []
         features_A = []
-        file_list = os.listdir(self.data_dir)
-        for video_dir in file_list:
-            # 枚举单个音频
-            single_audio_files = os.listdir(os.path.join(self.data_dir, video_dir))
-            for single_audio in tqdm(single_audio_files):
-                audio_id.append(video_dir)
-                audio_clip_id.append(single_audio.split('.')[0])
-                audio_id_clip_id.append(str(video_dir) + "_" + str(single_audio.split('.')[0]))
-                # print(single_audio)  ### 0001.wav
-                audio_path = os.path.join(self.data_dir, video_dir, single_audio)
-                embedding_A = self.__getAudioFeatures(audio_path)
-                features_A.append(embedding_A)
-                # text = self.__transText(audio_path)
-                # features_AtoT.append(text)
 
-        # 补长
-        # print('features_A',len(features_A))
-        # print('print(features_A[0])',len(features_A[0]))
-        # print('print(features_A[0][0])', len(features_A[0][0]))
-        # print('print(features_A[1])',len(features_A[1]))
-        # print('print(features_A[1][0])', len(features_A[1][0]))
-        # print('print(features_A[27])', len(features_A[27]))
-        # feature_A = self.__paddingSequence(features_A)
+        with open(self.csv_path, newline='') as csvfile:
+            csvreader = csv.reader(csvfile)
+            next(csvreader)
+            count = 1
+            for row in csvreader:
+                print(f"{count}/2198")
+                count +=1
+                audio_id.append(row[0])
+                audio_clip_id.append(row[1])
+                audio_path = os.path.join(self.data_dir, row[0], f'{row[1]}.wav')
+                if self.mode == "libraso":
+                    embedding_A = self.__getAudioEmbedding(audio_path)
+                elif self.mode == "wav2vec2":
+                    embedding_A = self.__getAudioFeatures(audio_path)
+                features_A.append(embedding_A)
 
         # 保存
-        features_A = np.array(features_A.to('cpu'))
+        if self.mode == "libraso":
+            features_A = self.__paddingSequence(features_A)
+            features_A = np.array(features_A)
         save_path = os.path.join(self.output_dir, 'audioFeature.npz')
-        np.savez(save_path, audio_id=audio_id, audio_clip_id=audio_clip_id, audio_id_clip_id=audio_id_clip_id,
+        np.savez(save_path, audio_id=audio_id, audio_clip_id=audio_clip_id,
                  feature_A=features_A)
 
         print('Features are saved in %s!' % save_path)
@@ -153,8 +149,9 @@ class getFeatures():
 
 
 if __name__ == "__main__":
-    input_dir= "D:\Search\MSA\SIMS\AudioFeature\\audioRaw"
-    output_dir= 'D:\Search\MSA\SIMS\AudioFeature'
+    input_dir= "D:\Search\MSA\MOSI\AudioFeature\\audioRaw"
+    csv_path="D:\Search\MSA\MOSI\MOSI_RAW\label.csv"
+    output_dir= 'D:\Search\MSA\MOSI\AudioFeature'
     os.makedirs(output_dir, exist_ok=True)
-    gf = getFeatures(input_dir,output_dir)
+    gf = getFeatures(input_dir,output_dir,csv_path,"libraso")
     gf.results()

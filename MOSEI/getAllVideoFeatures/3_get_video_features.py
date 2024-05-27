@@ -80,27 +80,21 @@ class getFeatures():
     def results(self):
         # 初始化存储视频特征的列表和视频信息的列表
         video_id = []  # 存储视频 ID
-        video_clip_id = []  # 存储视频帧 ID
-        video_id_clip_id = []  # 存储视频 ID 和视频帧 ID 的组合
+        clip_id = []  # 存储视频帧 ID
         features_V = []  # 存储视频特征
-
-        # 遍历视频数据目录中的所有视频文件夹
-        file_list = os.listdir(self.data_dir)
-        for video_dir in file_list:
-            # 构建当前视频文件夹的路径
-            image_dirs = os.path.join(self.data_dir, video_dir)
-            # 获取当前视频文件夹下的所有视频帧文件夹
-            dirs_list = os.listdir(image_dirs)
-            # 遍历当前视频文件夹下的所有视频帧文件夹
-            for image_dir in tqdm(dirs_list):
+        with open(self.csv_path, newline='') as csvfile:
+            csvreader = csv.reader(csvfile)
+            next(csvreader)
+            count = 1
+            for row in csvreader:
+                print(f"{count}/2198")
+                count += 1
                 # 将视频 ID 添加到视频 ID 列表中
-                video_id.append(video_dir)
+                video_id.append(row[0])
                 # 将视频帧 ID 添加到视频帧 ID 列表中
-                video_clip_id.append(image_dir)
-                # 将视频 ID 和视频帧 ID 的组合添加到视频 ID 和视频帧 ID 组合列表中
-                video_id_clip_id.append(str(video_dir) + str(image_dir))
+                clip_id.append(row[1])
                 # 构建当前视频帧的 CSV 文件路径
-                csv_path = os.path.join(self.data_dir, video_dir, image_dir, image_dir + '.csv')
+                csv_path = os.path.join(self.data_dir, row[0], row[1], row[1] + '.csv')
                 # 如果当前视频帧的 CSV 文件不存在
                 if not os.path.exists(csv_path):
                     # 将空特征向量添加到视频特征列表中
@@ -116,15 +110,15 @@ class getFeatures():
 
         # 将视频 ID、视频帧 ID、视频 ID 和视频帧 ID 组合、以及填充后的视频特征保存到 .npz 文件中
         save_path = os.path.join(self.output_dir, 'videoFeature.npz')
-        np.savez(save_path, video_id=video_id, video_clip_id=video_clip_id, video_id_clip_id=video_id_clip_id,
+        np.savez(save_path, video_id=video_id, clip_id=clip_id,
                  feature_V=feature_V)
         # 打印保存路径
         print('Features are saved in %s!' % save_path)
 
 
 if __name__ == "__main__":
-    input_dir = "D:\\Search\\MSA\\SIMS\\VideoFeature\\openface_feature"
-    output_dir = "D:\\Search\\MSA\\SIMS\\VideoFeature"
+    input_dir = "D:\\Search\\MSA\\MOSEI\\VideoFeature\\openface_feature"
+    output_dir = "D:\\Search\\MSA\\MOSEI\\VideoFeature"
     os.makedirs(output_dir, exist_ok=True)
     gf = getFeatures(input_dir, output_dir)
     gf.results()

@@ -153,8 +153,8 @@ class getFeatures():
 
 
 if __name__ == "__main__":
-    input_dir= "D:\Search\MSA\SIMS\AudioFeature\\audioRaw"
-    output_dir= 'D:\Search\MSA\SIMS\AudioFeature'
+    input_dir= "D:\Search\MSA\MOSEI\AudioFeature\\audioRaw"
+    output_dir= 'D:\Search\MSA\MOSEI\AudioFeature'
     os.makedirs(output_dir, exist_ok=True)
     gf = getFeatures(input_dir,output_dir)
     gf.results()

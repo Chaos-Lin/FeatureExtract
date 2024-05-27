@@ -78,7 +78,7 @@ def get_text_features(input_dir, output_dir):
              feature_T=feature_T, raw_text=raw_text, tokens=tokens)
 
 if __name__ == '__main__':
-    input_dir = 'D:\Search\MSA\SIMS\SIMS_raw'
-    output_dir = 'D:\Search\MSA\SIMS\TextFeature'
+    input_dir = 'D:\Search\MSA\MOSEI\MOSEI_raw'
+    output_dir = 'D:\Search\MSA\MOSEI\TextFeature'
     os.makedirs(output_dir, exist_ok=True)
     get_text_features(input_dir, output_dir)

@@ -1,7 +1,7 @@
 import pickle
 import numpy as np
 
-with open(r'D:\Search\MSA\data\unaligned_unsplit_data.pkl', 'rb') as f:
+with open(r'D:\Search\MSA\SIMS\unaligned_unsplit_data.pkl', 'rb') as f:
     data = pickle.load(f)
     data['audio'] = np.array(data['audio'])
     data['vision'] = np.array(data['vision'])

@@ -106,7 +106,7 @@ with open(r'D:\Search\MSA\data\unaligned_unsplit_data.pkl', 'rb') as f:
         'test': testdata
     }
 
-    with open(r'D:\Search\MSA\SIMS\unaligned.pkl', 'ab') as f:
+    with open(r'D:\Search\MSA\MOSEI\unaligned.pkl', 'ab') as f:
         pickle.dump(data, f)
 
 # with open(r'D:\SHU\大论文\老人数据集\mesic.pkl', 'rb') as f:

@@ -42,7 +42,7 @@ def split_videos_and_extract_frames(data_dir, output_dir):
                 print(f"Input video {input_path} does not exist or is not readable")
 
 
-data_dir = 'D:\Search\MSA\SIMS\SIMS_raw\Raw'
-output_dir = 'D:\Search\MSA\SIMS\VideoFeature\\video_frames' #存放视频帧的总路径
+data_dir = 'D:\Search\MSA\MOSI\MOSI_raw\Raw'
+output_dir = 'D:\Search\MSA\MOSI\VideoFeature\\video_frames' #存放视频帧的总路径
 os.makedirs(output_dir, exist_ok=True)
 split_videos_and_extract_frames(data_dir, output_dir)

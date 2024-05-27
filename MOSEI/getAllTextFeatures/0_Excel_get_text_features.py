@@ -38,7 +38,7 @@ for i in range(text_csv.nrows):
     text_clip_id.append(text_clip_id_num)
     text_id_clip_id.append(str(text_id_num) + str('-') + str(text_clip_id_num))
 
-save_path = os.path.join('D:\Search\MSA\SIMS\TextFeature\\textFeature.npz')
+save_path = os.path.join('D:\Search\MSA\MOSEI\TextFeature\\textFeature.npz')
 np.savez(save_path, text_id=text_id, text_clip_id=text_clip_id, text_id_clip_id=text_id_clip_id,
          raw_text=raw_text, text_ids=text_ids, text_mask=text_mask)
 

@@ -57,14 +57,14 @@ def get_text_features(input_dir, output_dir):
     raw_text = []
     tokens = []
 
-    model_name = 'D:\Search\pretrained_weights\\bert-base-chinese'
+    model_name = 'D:\Search\pretrained_weights\\bert-base-uncased'
     tokenizer = BertTokenizer.from_pretrained(model_name)
     model = BertModel.from_pretrained(model_name)
     file = os.path.join(input_dir, 'label.csv')
     with open(file, 'r', newline='', encoding='utf-8') as file:
         reader = csv.DictReader(file)
         for i, row in enumerate(reader):
-            print(f"{i}/2281")
+            print(f"{i}/2198")
             text_id.append(row['video_id'])
             text_clip_id.append(row['clip_id'])
             text_id_clip_id.append(f"{row['video_id']}_{row['clip_id']}")
@@ -78,7 +78,7 @@ def get_text_features(input_dir, output_dir):
              feature_T=feature_T, raw_text=raw_text, tokens=tokens)
 
 if __name__ == '__main__':
-    input_dir = 'D:\Search\MSA\SIMS\SIMS_raw'
-    output_dir = 'D:\Search\MSA\SIMS\TextFeature'
+    input_dir = 'D:\Search\MSA\MOSI\MOSI_raw'
+    output_dir = 'D:\Search\MSA\MOSI\TextFeature'
     os.makedirs(output_dir, exist_ok=True)
     get_text_features(input_dir, output_dir)

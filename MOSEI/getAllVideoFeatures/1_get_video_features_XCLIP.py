@@ -109,8 +109,8 @@ class getFeatures():
 
 
 if __name__ == "__main__":
-    input_dir = "D:\Search\MSA\SIMS\SIMS_raw\Raw"
-    output_dir = "D:\\Search\\MSA\\SIMS\\VideoFeature"
+    input_dir = "D:\Search\MSA\MOSEI\MOSEI_raw\Raw"
+    output_dir = "D:\\Search\\MSA\\MOSEI\\VideoFeature"
     model_id = "D:\Search\LLM\\xclip-base-patch32"
     os.makedirs(output_dir, exist_ok=True)
     gf = getFeatures(input_dir, output_dir, model_id)
