@@ -64,7 +64,7 @@ def get_text_features(input_dir, output_dir):
     with open(file, 'r', newline='', encoding='utf-8') as file:
         reader = csv.DictReader(file)
         for i, row in enumerate(reader):
-            print(f"{i}/2281")
+            print(f"{i}")
             text_id.append(row['video_id'])
             text_clip_id.append(row['clip_id'])
             text_id_clip_id.append(f"{row['video_id']}_{row['clip_id']}")

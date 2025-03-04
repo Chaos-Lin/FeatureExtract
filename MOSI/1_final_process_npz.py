@@ -9,8 +9,8 @@ def __init_MESIC():
 
     # 读取text的特征
     text_data = np.load('D:\Search\MSA\MOSI\TextFeature\\textFeature.npz')
-    raw_text = text_data['raw_text']
-    tokens = text_data["tokens"]
+    # raw_text = text_data['raw_text']
+    # tokens = text_data["tokens"]
     feature_T = text_data['feature_T']
 
     # 读取video的特征
@@ -38,8 +38,8 @@ def __init_MESIC():
             'video_id': video_id,
             'clip_id': clip_id,
             # 'video_id_clip_id': video_id_clip_id,
-            'text_raw': raw_text,
-            "tokens": tokens,
+            # 'text_raw': raw_text,
+            # "tokens": tokens,
             'text_mask': feature_T,
             'audio': feature_A,
             'vision': feature_V,

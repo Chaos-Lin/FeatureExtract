@@ -24,7 +24,7 @@ import numpy as np
 
 
 # with open("D:\Search\MSA\Dataset\MOSI/unaligned_50.pkl", 'rb') as file:
-with open("D:\Search\MSA\Dataset\SIMS/unaligned.pkl", 'rb') as file:
+with open("D:\Search\MSA\SIMS/unaligned.pkl", 'rb') as file:
     data = pickle.load(file)
 print(data.keys())
 print(data['train'].keys())

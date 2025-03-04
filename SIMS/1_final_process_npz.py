@@ -4,17 +4,17 @@ import pandas as pd
 
 def __init_MESIC():
     # 读取audio的特征
-    audio_data = np.load('D:\Search\MSA\SIMS\AudioFeature\\audioFeature.npz')
+    audio_data = np.load('D:\Search\MSA\SIMS\AudioFeature\\audioFeature_o.npz')
     feature_A = audio_data['feature_A']
 
     # 读取text的特征
-    text_data = np.load('D:\Search\MSA\SIMS\TextFeature\\textFeature.npz')
-    raw_text = text_data['raw_text']
-    tokens = text_data["tokens"]
+    text_data = np.load('D:\Search\MSA\SIMS\TextFeature\\textFeature_o.npz')
+    # raw_text = text_data['raw_text']
+    # tokens = text_data["tokens"]
     feature_T = text_data['feature_T']
 
     # 读取video的特征
-    video_data = np.load('D:\Search\MSA\SIMS\VideoFeature\\videoFeature.npz')
+    video_data = np.load('D:\Search\MSA\SIMS\VideoFeature\\videoFeature_o.npz')
     feature_V = video_data['feature_V']
     # video_id = video_data['video_id']
     # video_clip_id = video_data['video_clip_id']
@@ -38,9 +38,9 @@ def __init_MESIC():
             'video_id': video_id,
             'video_clip_id': video_clip_id,
             # 'video_id_clip_id': video_id_clip_id,
-            'text_raw': raw_text,
-            "tokens": tokens,
-            'text_mask': feature_T,
+            # 'text_raw': raw_text,
+            # "tokens": tokens,
+            'text': feature_T,
             'audio': feature_A,
             'vision': feature_V,
             'label_M': label_M,

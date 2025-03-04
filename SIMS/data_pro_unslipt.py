@@ -3,25 +3,16 @@ import pickle
 import pandas as pd
 import os
 import csv
-from transformers import BertTokenizer, BertModel
-import torch
-from tqdm import tqdm
-# 标签及模式保存
-csv_path = "D:\Search\MSA\MOSEI\MOSEI_RAW\label.csv"
-# todo
-label_data = pd.read_csv(csv_path)
-label_A = label_data['label_A'].values
-label_V = label_data['label_V'].values
-label_T = label_data['label_T'].values
-label_M = label_data['label'].values
-mode = label_data['mode'].values
-text_raw = label_data['text'].values
-# print(label_A[0])
 
 from transformers import BertTokenizer, BertModel
 import torch
+import numpy as np
 from tqdm import tqdm
-def tokenize(text, model, tokenizer, max_length=50):
+import csv
+import os
+
+
+def tokenize(text, model, tokenizer, max_length=39):
     # Tokenization
     tokens = tokenizer.tokenize(text)
     input_ids = tokenizer.convert_tokens_to_ids(tokens)
@@ -55,7 +46,7 @@ def tokenize(text, model, tokenizer, max_length=50):
 
 def get_text_features(text_raw):
     embedding = []
-    model_name = 'D:\Search\pretrained_weights\\bert-base-uncased'
+    model_name = 'D:\Search\pretrained_weights\\bert-base-chinese'
     tokenizer = BertTokenizer.from_pretrained(model_name)
     model = BertModel.from_pretrained(model_name)
 
@@ -66,8 +57,22 @@ def get_text_features(text_raw):
         embedding.append(tokenize(text, model, tokenizer))
 
     return embedding
-# 获取音频地址
 
+
+# 标签及模式保存
+csv_path = "D:\Search\MSA\SIMS\SIMS_RAW\label.csv"
+# todo
+label_data = pd.read_csv(csv_path)
+label_A = label_data['label_A'].values
+label_V = label_data['label_V'].values
+label_T = label_data['label_T'].values
+label_M = label_data['label'].values
+mode = label_data['mode'].values
+text_raw = label_data['text'].values
+# print(label_A[0])
+# 加上文本
+
+# 获取音频地址
 def creat_filelist(input_path, csv_path, data_type):
     file_list = []
     with open(csv_path, encoding='utf-8') as csvfile:
@@ -78,10 +83,11 @@ def creat_filelist(input_path, csv_path, data_type):
             file_list.append(audio_path)
     return file_list
 
-file_list = creat_filelist("D:\Search\MSA\MOSEI\AudioFeature\\audioRaw", csv_path, "wav")
-file_list2 = creat_filelist("D:\Search\MSA\MOSEI\MOSEI_RAW\Raw", csv_path, "mp4")
-# print(file_list)
+file_list = creat_filelist("D:\Search\MSA\SIMS\AudioFeature\\audioRaw", csv_path, "wav")
+file_list2 = creat_filelist("D:\Search\MSA\SIMS\SIMS_raw\Raw", csv_path, "mp4")
 text = get_text_features(text_raw)
+# print(file_list)
+
 data = {
     'audio': file_list,
     'video': file_list2,
@@ -94,7 +100,7 @@ data = {
 }
 
 
-with open(r'D:\Search\MSA\MOSEI\MOSEI_unsplit.pkl', 'ab') as f:
+with open(r'D:\Search\MSA\SIMS\SIMS_unsplit.pkl', 'ab') as f:
     pickle.dump(data, f)
 
 
